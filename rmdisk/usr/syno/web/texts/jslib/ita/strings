@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Indietro"
+alt_next	=	"Avanti"
+apply	=	"OK"
+cancel	=	"Annulla"
+error_blank	=	"{0} non può essere vuoto."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Aggiornare Internet Explorer alla versione più recente per una esperienza di navigazione migliore."
+
+[dsinfo]
+ds_model	=	"Nome modello"
+ds_status	=	"Stato"
+ds_version	=	"Versione DSM"
+ip_addr	=	"Indirizzo IP "
+mac_addr	=	"Indirizzo MAC"
+server_name	=	"Nome server"
+version	=	"Versione"
+
+[extlang]
+fieldblank	=	"Questo campo è necessario."
+fieldmaxlen	=	"La lunghezza massima per questo campo è {0}."
+fieldminlen	=	"La lunghezza minima per questo campo è {0}."
+
+[hint]
+eds_default_pwd	=	"Per i nuovi utenti l'account predefinito è "admin" e la password è vuota."
+
+[network]
+dhcp	=	"Ottieni automaticamente la configurazione di rete (DHCP) (consigliato)"
+ezinternet_pppoe_title	=	"Impostazione PPPoE"
+manual	=	"Utilizza configurazione manuale"
+netconfig_desc	=	"Configura l'ambiente di rete."
+netconfig_title	=	"Impostazione della rete"
+network_def_gateway	=	"Gateway predefinito"
+network_dns	=	"Server DNS"
+network_netmask	=	"Maschera di sottorete"
+pppoe	=	"Broadband(PPPoE)"
+pppoe_desc	=	"Inserire le informazioni dell'account dal proprio Internet Service Provider (ISP)."
+
+[vtype]
+bad_host	=	"Nome server non valido."
+bad_ip	=	"L'indirizzo IP immesso non è valido."
+bad_mask	=	"La subnet mask immessa non è valida."
+invalid_host	=	"Il  nome server può essere composto da lettere, numeri, caratteri di sottolineatura e segni meno. Il primo carattere deve essere una lettera."
+password_confirm_failed	=	"Conferma della password non riuscita. Inserirla di nuovo."
+

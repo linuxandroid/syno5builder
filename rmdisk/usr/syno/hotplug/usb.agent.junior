@@ -1,0 +1,57 @@
+#!/bin/sh
+
+FDT_MNT="/fdt_mnt"
+FDT_VID="f402"
+FDT_PID="f402"
+
+is_vid_pid_belong_to_fdt ()
+{
+	if [ "${DEVTYPE}" == "partition" ]; then
+		VID=`cat /sys/${PHYSDEVPATH}/../../../../idVendor`
+		PID=`cat /sys/${PHYSDEVPATH}/../../../../idProduct`
+		if [ "${VID}" == "${FDT_VID}" -a "${PID}" == "${FDT_PID}" ]; then
+			return 0 
+		fi
+	fi
+	return 1
+}
+
+fdt_device_handler () {
+	if [ ! -d ${FDT_MNT} ]; then
+		mkdir -p ${FDT_MNT}
+	fi
+	mount -t vfat /dev/${DEVNAME} ${FDT_MNT}
+	if [ ! $? ]; then
+		return 1
+	fi
+	if [ -e ${FDT_MNT}/fdt_run.sh ]; then
+		cd ${FDT_MNT}
+		${FDT_MNT}/fdt_run.sh
+		cd /
+		umount ${FDT_MNT}
+	fi
+}
+
+if [ -n "${DEVNAME}" ]; then
+	# this is for device type checking log, if device not supported, it will log via synodiskport
+	DISKPORTTYPE=`/usr/syno/bin/synodiskport -portcheck ${DEVNAME}`
+	case "${DISKPORTTYPE}" in
+		UNKNOWN)
+		;;
+		*)
+			if [ "${ACTION}" = "add" ]; then
+				if [ -b "/dev/${DEVNAME}" ]; then
+					/bin/rm /dev/${DEVNAME}
+					/bin/mknod /dev/${DEVNAME} b ${MAJOR} ${MINOR}
+				else
+					/bin/mknod /dev/${DEVNAME} b ${MAJOR} ${MINOR}
+				fi
+				#for FDT device auto-run functionality
+				is_vid_pid_belong_to_fdt
+				if [ $? -eq 0 ]; then
+					fdt_device_handler
+				fi
+			fi
+		;;
+	esac
+fi

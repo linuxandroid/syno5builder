@@ -1,0 +1,3 @@
+rmdisk/lib/modules/*.ko
+!rmdisk/lib/modules/synobios.ko
+kernel/

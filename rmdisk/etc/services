@@ -1,0 +1,13 @@
+# /etc/services:
+
+ftp-data	20/tcp
+ftp-data	20/udp
+# 21 is registered to ftp, but also used by fsp
+ftp		21/tcp
+ftp		21/udp		fsp fspd
+telnet		23/tcp
+telnet		23/udp
+bootpc		68/tcp				# BOOTP client
+bootpc		68/udp
+tftp		69/tcp
+tftp		69/udp

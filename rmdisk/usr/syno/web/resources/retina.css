@@ -1,0 +1,12 @@
+.view_container_retina {
+	display: none;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+	.view_container_normal {
+		display: none;
+	}
+	.view_container_retina {
+		display: block;
+	}
+}

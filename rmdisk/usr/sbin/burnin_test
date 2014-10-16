@@ -1,0 +1,646 @@
+#!/bin/sh
+# Copyright (c) 2000-2011 Synology Inc. All rights reserved.
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
+GPIO=/sys/class/gpio
+SYNOINFO=/etc.defaults/synoinfo.conf
+
+BN_LOCK=/tmp/burnin.lock
+
+BN_STATUS=/tmp/burnin.$$
+BN_STATUS_UNKNOWN=0
+BN_STATUS_INIT=1
+BN_STATUS_STAGE1=2
+BN_STATUS_STAGE2=3
+BN_STATUS_COMPLETE=4
+BN_STATUS_FAILED=5
+
+# link self test begins from eth2. all before eth2 will do ftpget.
+BN_STAGE2_SELF_TEST_BEGIN=2
+
+TEST_NOTYET=0
+TEST_PASSED=1
+TEST_FAILED=2
+
+FTP_USER=admin
+FTP_PASSWD=admin
+
+disable_remote_command=0
+
+is_us2="no"
+is_us3="no"
+support_lcm="no"
+bn_silent="no"
+bn_stage1_skip="no"
+bn_stage2_been_passed="no"
+bn_stage2_duration=90
+
+get_spec_hw()
+{
+	local _maxdisks=$(get_key_value $SYNOINFO maxdisks)
+	local _isus3=`cat /proc/sys/kernel/syno_hw_version| grep US3`
+	support_lcm=`get_key_value $SYNOINFO support_acm`
+
+	if [ 0 -ne "$_maxdisks" ]; then
+		return
+	fi
+
+	if [ "x" = "x$_isus3" ]; then
+		is_us2="yes"
+	else
+		is_us3="yes"
+	fi
+}
+
+led_init()
+{
+	if [ "yes" = "$is_us2" ]; then
+		echo 40 > $GPIO/export
+		echo out > $GPIO/gpio40/direction
+		echo 36 > $GPIO/export
+		echo out > $GPIO/gpio36/direction
+		echo 37 > $GPIO/export
+		echo out > $GPIO/gpio37/direction
+	fi
+}
+
+led_status_off()
+{
+	if [ "yes" = "$is_us2" ]; then
+		echo 0 > $GPIO/gpio40/value
+		echo 0 > $GPIO/gpio36/value
+	elif [ "yes" = "$support_lcm" ]; then
+		echo 7 > /dev/ttyACM0
+	else
+		echo 7 > /dev/ttyS1
+	fi
+}
+
+led_status_green()
+{
+	if [ "yes" = "$is_us3" ]; then
+		# no status led
+		return
+	elif [ "yes" = "$is_us2" ]; then
+		echo 0 > $GPIO/gpio40/value
+		echo 1 > $GPIO/gpio36/value
+	elif [ "yes" = "$support_lcm" ]; then
+		echo 8 > /dev/ttyACM0
+	else
+		echo 8 > /dev/ttyS1
+	fi
+}
+
+led_status_orange()
+{
+	if [ "yes" = "$is_us3" ]; then
+		# no status led
+		return
+	elif [ "yes" = "$is_us2" ]; then
+		echo 1 > $GPIO/gpio40/value
+		echo 0 > $GPIO/gpio36/value
+	elif [ "yes" = "$support_lcm" ]; then
+		echo : > /dev/ttyACM0
+	else
+		echo : > /dev/ttyS1
+	fi
+}
+
+led_stage_procesing()
+{
+	local _led_status=0
+	local _stop_function=$1
+
+	while ! $_stop_function; do
+		if [ 0 -eq "$_led_status" ]; then
+			led_status_green
+		else
+			led_status_orange
+		fi
+
+		_led_status=$((($_led_status + 1) % 2))
+		sleep 1
+	done
+}
+
+led_power_on()
+{
+	if [ "yes" = "$is_us2" ]; then
+		echo 0 > $GPIO/gpio37/value
+	else
+		echo 4 > /dev/ttyS1
+	fi
+}
+
+led_power_off()
+{
+	if [ "yes" = "$is_us2" ]; then
+		echo 1 > $GPIO/gpio37/value
+	else
+		echo 6 > /dev/ttyS1
+	fi
+}
+
+system_max_lan()
+{
+	local _num=-1
+
+	if [ -f /proc/sys/kernel/syno_internal_netif_num ]; then
+		_num=$(cat /proc/sys/kernel/syno_internal_netif_num)
+	else
+		_num=$(get_key_value $SYNOINFO maxlanport)
+	fi
+
+	[ "$_num" -ge 1 ] || _num=1
+	echo $_num
+}
+
+test_flag_set()
+{
+	if [ $BN_STATUS_STAGE2 -eq "$(bn_status_get)" ] && [ "yes" = "$bn_stage2_been_passed" ]; then
+		return
+	fi
+
+	mantool -test_flag_set $1 $2
+}
+
+test_flag_get()
+{
+	mantool -test_flag_get $1
+}
+
+free_tmp()
+{
+	local tmp_free=$(df -m /tmp | tail -1 | xargs echo | cut -d' ' -f4)
+	echo $(((${tmp_free:-50} - 2) * 95 / 100))
+}
+
+bn_msg()
+{
+	echo `date +'%b %e %T'` burnin: "$@"
+}
+
+bn_log()
+{
+	local _msg=$(bn_msg "$@")
+
+	echo $_msg
+	echo $_msg >> /var/log/messages
+}
+
+bn_status_set()
+{
+	echo "$1" > $BN_STATUS
+}
+
+bn_status_get()
+{
+	if [ -f $BN_STATUS ]; then
+		cat $BN_STATUS 2>> /var/log/messages
+	else
+		echo $BN_STATUS_UNKNOWN
+	fi
+}
+
+bn_status_show()
+{
+	local _pid=$(cat $BN_LOCK 2>> /var/log/messages)
+
+	[ -f "/tmp/burnin.$_pid" ] || { echo "no burn-in is running..."; return; }
+
+	case "$(cat /tmp/burnin.$_pid 2>> /var/log/messages)" in
+		$BN_STATUS_UNKNOWN)
+			echo "unknown"
+			;;
+		$BN_STATUS_INIT)
+			echo "initialize"
+			;;
+		$BN_STATUS_STAGE1)
+			echo "memory test. progress: $(cat /tmp/memtester.progress 2> /dev/null)"
+			;;
+		$BN_STATUS_STAGE2)
+			echo "dma test"
+			;;
+		$BN_STATUS_COMPLETE)
+			echo "PCBA burn-in completed"
+			;;
+		$BN_STATUS_FAILED)
+			echo "PCBA burn-in failed"
+			;;
+	esac
+}
+
+bn_lock()
+{
+	if [ ! -f $BN_LOCK ]; then
+		echo $$ > $BN_LOCK
+	else
+		bn_log "PCBA burn-in test is already running..."
+		exit 1
+	fi
+}
+
+bn_unlock()
+{
+	rm -f $BN_LOCK
+}
+
+bn_completed()
+{
+	bn_log "Burn-in test main thread completed"
+	bn_status_set $BN_STATUS_COMPLETE
+
+	exit 0
+}
+
+bn_error_exit()
+{
+	bn_unlock
+	if [ "Fail" = "$(test_flag_get PTB_NETWORK_CRC)" ]; then
+		bn_log "Restart rc.network"
+		/etc/rc.network restart > /dev/null 2>&1
+	fi
+	bn_log "Burn-in exited with error or force terminate"
+	bn_status_set $BN_STATUS_FAILED
+
+	exit 1
+}
+
+bn_init()
+{
+	set -o nounset
+	trap bn_error_exit HUP INT TERM
+
+	get_spec_hw
+	led_init
+	bn_lock
+	bn_status_set $BN_STATUS_INIT
+}
+
+bn_seconds()
+{
+	date +%s | cut -d' ' -f3
+}
+
+bn_ftpget_max_lan()
+{
+	local _maxlan=$(system_max_lan)
+
+	if [ $_maxlan -lt $BN_STAGE2_SELF_TEST_BEGIN ]; then
+		echo $_maxlan
+	else
+		echo $BN_STAGE2_SELF_TEST_BEGIN
+	fi
+}
+
+bn_link_detect()
+{
+	if [ -f /usr/syno/bin/ethtool ]; then
+		[ "yes" = "$(echo `ethtool $1 2>&1 | grep 'Link detected' | cut -d':' -f2`)" ]
+	else
+		true # usbstation2
+	fi
+}
+
+bn_stage1()
+{
+	[ "yes" = "$bn_stage1_skip" ] && return
+
+	bn_log "Start memtester"
+	bn_status_set $BN_STATUS_STAGE1
+	bn_stage1_led_status &
+
+	if ! memtester -max 1; then
+		bn_log "Failed to do memtester"
+		test_flag_set PTB_MEMORY_TEST $TEST_FAILED
+		bn_error_exit
+	fi
+
+	bn_log "Complete memtester"
+	test_flag_set PTB_MEMORY_TEST $TEST_PASSED
+}
+
+bn_stage1_led_status()
+{
+	local _led_active=""
+	local _led_complete=""
+	if [ "yes" = "$is_us3" ]; then
+		_led_active="memtest_blinking"
+		_led_complete="memtest_off"
+	else
+		_led_active="usbcopy_blinking"
+		_led_complete="usbcopy_off"
+	fi
+
+	synohwctrl -set_led ${_led_active}
+	sleep 1
+	led_stage_procesing bn_stage1_should_stop
+	synohwctrl -set_led ${_led_complete}
+}
+
+bn_stage1_should_stop()
+{
+	local _get=`ps | grep memtester | grep -v grep`
+	[ "x" = "x$_get" ]
+}
+
+bn_stage2()
+{
+	local _lan=0
+	local _begin_time=$(bn_seconds)
+
+	bn_log "Check stage2 of this unit whether had been passed or not"
+	bn_stage2_been_passed_check
+
+	bn_log "Start RAM/NIC test"
+	bn_status_set $BN_STATUS_STAGE2
+
+	bn_log "Set up network interfaces"
+	bn_stage2_network_setup
+
+	while [ $_lan -lt $(bn_ftpget_max_lan) ]; do
+		bn_stage2_ftpget $_lan &
+		_lan=$(($_lan + 1))
+	done
+
+	bn_stage2_selftest &
+	bn_stage2_links_detect &
+	bn_stage2_led_status &
+
+	while [ $(($(bn_seconds) - $_begin_time)) -lt $(($bn_stage2_duration * 60)) ]; do
+		# only error would stop main loop before time is up
+		[ "$BN_STATUS_STAGE2" -eq "$(bn_status_get)" ] || exit 1
+		sleep 10
+	done
+
+	bn_log "Stage2 has been lasted for $bn_stage2_duration minutes and passed successfully."
+	test_flag_set PTB_FILE_CHECKSUM $TEST_PASSED
+	test_flag_set PTB_NETWORK_CRC $TEST_PASSED
+	test_flag_set pt_dma_cnt $((($(bn_seconds) - $_begin_time) / 60))
+}
+
+bn_stage2_duration_adjust()
+{
+	local _unique=$(get_key_value $SYNOINFO unique)
+	local _maxdisks=$(get_key_value $SYNOINFO maxdisks)
+	local _freemem=$(free | grep Mem| xargs echo| cut -d' ' -f2)
+	_freemem=`expr ${_freemem} / 1024`
+
+	if [ "$_freemem" -le 1024 ] && [ "$_maxdisks" -le 2 ]; then
+		bn_stage2_duration=60
+	fi
+}
+
+bn_stage2_been_passed_check()
+{
+	if [ "Pass" = "$(test_flag_get PTB_FILE_CHECKSUM)" ] && [ "Pass" = "$(test_flag_get PTB_NETWORK_CRC)" ]; then
+		bn_log "This unit had been passed. Test flags will not be updated"
+		bn_stage2_been_passed="yes"
+	else
+		bn_log "This unit is not passed yet."
+	fi
+}
+
+bn_stage2_should_stop()
+{
+	[ "$BN_STATUS_FAILED" -eq "$(bn_status_get)" -o "$BN_STATUS_UNKNOWN" -eq "$(bn_status_get)" ]
+}
+
+bn_stage2_network_setup()
+{
+	local _lan=0
+	local _maxlan=$(system_max_lan)
+
+	ip route flush table main
+	while [ $_lan -lt $_maxlan ]; do
+		local _old=$(ifconfig eth$_lan | grep 'inet addr' | cut -d':' -f2 | cut -d' ' -f1 )
+		local _new=169.$((254 - $_lan)).$(echo $_old | cut -d'.' -f3,4)
+
+		bn_log "Set IP address $_new to eth$_lan"
+		ip route add 169.$((254 - $_lan)).0.0/16 dev eth$_lan
+		ifconfig eth$_lan $_new
+
+		_lan=$(($_lan + 1))
+	done
+
+	sleep 3
+}
+
+bn_stage2_led_status()
+{
+
+	if [ "yes" == "$is_us3" ]; then
+		synohwctrl -set_led memtest_on
+	elif [ "yes" = "$is_us2" ]; then
+		led_power_off
+	else
+		synohwctrl -set_led usbcopy_on
+	fi
+
+	led_stage_procesing bn_stage2_should_stop
+}
+
+bn_stage2_ftpget()
+{
+	local _nif=eth$1
+	local _server=169.$((254 - $1)).1.1
+	local _localdir=/tmp/$_server
+	local _freetmp=$(free_tmp)
+	local _maxidx=$(( $_freetmp / $(bn_ftpget_max_lan) ))
+	local _platform=$(get_key_value $SYNOINFO unique | cut -d"_" -f2)
+	local _idx=0
+	local _crcerr=0
+	local _ftpok="no"
+	local _retryftp=5
+	local _localfile=$_localdir/testing.$_idx
+
+	mkdir -p $_localdir
+
+	while ! bn_stage2_should_stop; do
+		_idx=0
+		_crcerr=0
+
+		[ "yes" = "$bn_silent" ] || bn_msg "Remove files in $_localdir"
+		rm -f $_localdir/*
+
+		while [ $_idx -lt $_maxidx ]; do
+
+			_ftpok="no"
+			_retryftp=5
+			_localfile=$_localdir/testing.$_idx
+
+			[ "yes" = "$bn_silent" ] || bn_msg "Fetching $_localfile from $_server"
+			while [ "yes" != "$_ftpok" -a $_retryftp -gt 0 ]; do
+				if ftpget $_server -u $FTP_USER -p $FTP_PASSWD $_localfile /public/testing; then
+					_ftpok="yes"
+				fi
+				_retryftp=$(($_retryftp - 1))
+			done
+
+			if [ "yes" != "$_ftpok" ]; then
+				bn_log "ftpget returned error ($?) when fetching $_localfile"
+				test_flag_set PTB_NETWORK_CRC $TEST_FAILED
+				bn_error_exit
+			elif [ ! -f "$_localfile" ]; then
+				bn_log "Failed to ftpget $_localfile"
+				test_flag_set PTB_NETWORK_CRC $TEST_FAILED
+				bn_error_exit
+			elif [ "4193933615" != $(cksum $_localfile | cut -d' ' -f1) ]; then
+				bn_log "Incorrect checksum of $_localfile"
+				test_flag_set PTB_FILE_CHECKSUM $TEST_FAILED
+				bn_error_exit
+			fi
+
+			_idx=$(($_idx + 1))
+		done
+
+		if [ "6281" = "$(get_key_value $SYNOINFO unique | cut -d'_' -f2)" ]; then
+			[ "yes" = "$bn_silent" ] || bn_msg "Check network CRC errors for $_nif."
+			_crcerr=$(ifconfig $_nif | grep 'RX' | grep errors | cut -d':' -f3 | cut -d' ' -f1)
+			if [ "$_crcerr" -gt 2 ]; then
+				led_power_off
+			elif [ "$_crcerr" -gt 4 ]; then
+				bn_log "Too many RX error packets for $_nif"
+				test_flag_set PTB_NETWORK_CRC $TEST_FAILED
+				bn_error_exit
+			fi
+		fi
+
+	done
+}
+
+bn_stage2_links_detect()
+{
+	local _lan=0
+	local _maxlan=$(bn_ftpget_max_lan)
+
+	[ $_lan -lt $_maxlan ] || return
+
+	while ! bn_stage2_should_stop; do
+		_lan=0
+		while [ $_lan -lt $_maxlan ]; do
+
+			[ "yes" = "$bn_silent" ] || bn_msg "Detect link of eth$_lan"
+			if ! bn_link_detect "eth$_lan"; then
+				bn_log "Failed to detect link of eth$_lan"
+				test_flag_set PTB_NETWORK_CRC $TEST_FAILED
+				bn_error_exit
+			fi
+
+			_lan=$(($_lan + 1))
+			sleep 10
+		done
+	done
+}
+
+bn_stage2_selftest()
+{
+	local _lan=$BN_STAGE2_SELF_TEST_BEGIN
+	local _maxlan=$(system_max_lan)
+
+	[ $_lan -lt $_maxlan ] || return
+
+	while ! bn_stage2_should_stop; do
+		_lan=$BN_STAGE2_SELF_TEST_BEGIN
+		while [ $_lan -lt $_maxlan ]; do
+
+			[ "yes" = "$bn_silent" ] || bn_msg "Self test eth$_lan"
+			if ! ethtool -t eth$_lan online 1>/dev/null 2>&1; then
+				bn_log "Failed to self test eth$_lan"
+				test_flag_set PTB_NETWORK_CRC $TEST_FAILED
+				bn_error_exit
+			fi
+
+			_lan=$(($_lan + 1))
+			sleep 10
+		done
+	done
+}
+
+bn_remaining_force_stop()
+{
+	killall memtester >/dev/null 2>&1
+
+	for p in /tmp/burnin.*; do
+		if [ -f "$p" ]; then
+			kill -9 $(echo $p | cut -d'.' -f2) >/dev/null 2>&1
+			rm -f $p
+		fi
+	done
+}
+
+bn_usage()
+{
+	cat <<USAGE
+`basename $0`
+	-k		skip memtester
+	-s		show status
+	-t MIN		assign duration of stage2
+	-q		be more silent
+	-f		force stop remaining sub-processes in background
+USAGE
+}
+
+# remote command will get script from remote ip and run it.
+# burnin_test will not be exec if remote command exec successfully
+remote_command()
+{
+	local remote_exec_failed=1
+	if [ ! -d /initrd ] && [ -f /.nodisk ]; then
+		/usr/sbin/remote_command.sh
+		remote_exec_failed=$?
+		if [ "0" -eq "${remote_exec_failed}" ] ; then
+			exit 0
+		fi
+	fi
+}
+
+
+bn_stage2_duration_adjust
+
+while getopts ":kst:qfh" opt; do
+	case "$opt" in
+		k)
+			bn_stage1_skip="yes"
+			disable_remote_command=1
+			;;
+		s)
+			bn_status_show
+			exit 0
+			;;
+		t)
+			bn_stage2_duration=$OPTARG
+			disable_remote_command=1
+			;;
+		q)
+			bn_silent="yes"
+			disable_remote_command=1
+			;;
+		f)
+			bn_remaining_force_stop
+			exit 0
+			;;
+		h)
+			bn_usage
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			exit 1
+			;;
+		:)
+			echo "Option -$OPTARG requires an argument." >&2
+			exit 1
+			;;
+	esac
+done
+
+if [ $disable_remote_command -eq 0 ] ; then
+    remote_command
+fi
+
+bn_init
+bn_stage1
+bn_stage2
+bn_completed
+

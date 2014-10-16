@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"뒤로"
+alt_next	=	"다음"
+apply	=	"확인"
+cancel	=	"취소"
+error_blank	=	"{0}은(는) 비워둘 수 없습니다."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"최상의 검색 능력을 얻으려면 Internet Explorer를 최신 버전으로 업데이트하십시오."
+
+[dsinfo]
+ds_model	=	"모델 이름"
+ds_status	=	"상태"
+ds_version	=	"DSM 버전"
+ip_addr	=	"IP 주소"
+mac_addr	=	"MAC 주소"
+server_name	=	"서버 이름"
+version	=	"버전"
+
+[extlang]
+fieldblank	=	"이 필드는 필수 필드입니다."
+fieldmaxlen	=	"이 필드의 최대 길이는 {0}입니다."
+fieldminlen	=	"이 필드의 최소 길이는 {0}입니다."
+
+[hint]
+eds_default_pwd	=	"처음 사용자인 경우 기본 계정은 "admin"이고 패스워드는 비어 있습니다."
+
+[network]
+dhcp	=	"자동으로 네트워크 구성 얻기(DHCP)(권장됨)"
+ezinternet_pppoe_title	=	"PPPoE 설정"
+manual	=	"수동 구성 이용"
+netconfig_desc	=	"네트워크 환경 구성."
+netconfig_title	=	"네트워크 설정"
+network_def_gateway	=	"기본 게이트웨이"
+network_dns	=	"DNS 서버"
+network_netmask	=	"서브넷 마스크"
+pppoe	=	"광대역(PPPoE)"
+pppoe_desc	=	"인터넷 서비스 제공업체(ISP)의 계정 정보를 입력하십시오."
+
+[vtype]
+bad_host	=	"잘못된 서버 이름."
+bad_ip	=	"입력한 IP 주소가 올바르지 않습니다."
+bad_mask	=	"입력한 서브네트 마스크가 올바르지 않습니다."
+invalid_host	=	"서버 이름에는 글자, 숫자, 밑줄 및 빼기 기호를 사용할 수 있습니다. 첫 번째 문자는 반드시 알파벳이어야 합니다."
+password_confirm_failed	=	"패스워드 확인 실패. 다시 입력해 주십시오. "
+
