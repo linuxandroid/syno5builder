@@ -1,0 +1,11 @@
+default 0
+timeout 3
+fallback 0
+
+title Nanoboot DSM 5.0-4493
+root (cd)
+kernel /zImage ihd_num=0 netif_num=4 syno_hw_version=DS3612xs sn=BCKIN00318 vid=0xF400 pid=0xF401 loglevel=0 vga=0x305
+
+title Nanoboot DSM 5.0-4493 (install/downgrade)
+root (hd0,0)
+kernel /zImage ihd_num=0 netif_num=4 syno_hw_version=DS3612xs sn=BCKIN00318 vid=0xF400 pid=0xF401 loglevel=0 vga=0x305 upgrade=5.0-4493

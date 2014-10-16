@@ -1,3 +1,7 @@
 rmdisk/lib/modules/*.ko
 !rmdisk/lib/modules/synobios.ko
 kernel/
+out/
+__s54493pre_iso_grub/zImage
+__s54493pre_iso_syslinux/zImage
+
