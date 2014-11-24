@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Wstecz"
+alt_next	=	"Następne"
+apply	=	"OK"
+cancel	=	"Anuluj"
+error_blank	=	"Pole {0} nie może być puste."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Zaktualizuj program Internet Explorer do najnowszej wersji, aby poprawić efektywność przeglądania stron."
+
+[dsinfo]
+ds_model	=	"Nazwa modelu"
+ds_status	=	"Status"
+ds_version	=	"Wersja oprogramowania DSM"
+ip_addr	=	"Adres IP"
+mac_addr	=	"Adres MAC"
+server_name	=	"Nazwa serwera"
+version	=	"Wersja"
+
+[extlang]
+fieldblank	=	"To pole jest wymagane."
+fieldmaxlen	=	"Maksymalna długość tego pola to {0}."
+fieldminlen	=	"Minimalna długość tego pola to {0}."
+
+[hint]
+eds_default_pwd	=	"W przypadku nowych użytkowników konto domyślne to „admin”, a hasło jest puste."
+
+[network]
+dhcp	=	"Pobierz konfigurację sieci automatycznie (DHCP) (zalecane)"
+ezinternet_pppoe_title	=	"Ustawienie PPPoE"
+manual	=	"Użyj ręcznej konfiguracji"
+netconfig_desc	=	"Skonfiguruj środowisko sieciowe."
+netconfig_title	=	"Konfiguracja sieci"
+network_def_gateway	=	"Domyślna brama"
+network_dns	=	"Serwer DNS"
+network_netmask	=	"Maska podsieci"
+pppoe	=	"Szerokopasmowe (PPPoE)"
+pppoe_desc	=	"Wprowadź informacje o koncie uzyskane od dostawcy usług internetowych (ISP)."
+
+[vtype]
+bad_host	=	"Niepoprawna nazwa serwera."
+bad_ip	=	"Wprowadzony adres IP jest nieprawidłowy."
+bad_mask	=	"Wprowadzona maska podsieci jest nieprawidłowa."
+invalid_host	=	"Nazwa serwera może zawierać litery, cyfry, podkreślenia i znaki minus. Pierwszym znakiem musi być litera."
+password_confirm_failed	=	"Potwierdzenie hasła nie powiodło się. Wprowadź hasło ponownie."
+

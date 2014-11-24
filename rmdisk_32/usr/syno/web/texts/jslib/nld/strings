@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Terug"
+alt_next	=	"Volgende"
+apply	=	"OK"
+cancel	=	"Annuleren"
+error_blank	=	"{0} kan niet worden geleegd."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Werk Internet Explorer bij naar de laatste versie voor de beste surfervaring."
+
+[dsinfo]
+ds_model	=	"Modelnaam"
+ds_status	=	"Status"
+ds_version	=	"DSM-versie"
+ip_addr	=	"IP-adres"
+mac_addr	=	"MAC adres"
+server_name	=	"Servernaam"
+version	=	"Versie"
+
+[extlang]
+fieldblank	=	"Dit veld is vereist"
+fieldmaxlen	=	"De maximumlengte voor dit veld is {0}."
+fieldminlen	=	"De minimumlengte voor dit veld is {0}."
+
+[hint]
+eds_default_pwd	=	"Voor nieuwe gebruikers is de standaardaccount "admin" en het wachtwoord leeg."
+
+[network]
+dhcp	=	"De netwerkconfiguratie automatisch ophalen (DHCP) (aanbevolen)"
+ezinternet_pppoe_title	=	"PPPoE-instelling"
+manual	=	"Handmatige configuratie gebruiken"
+netconfig_desc	=	"De netwerkomgeving configureren."
+netconfig_title	=	"Netwerk instellen"
+network_def_gateway	=	"Standaardgateway"
+network_dns	=	"DNS-server"
+network_netmask	=	"Subnet mask"
+pppoe	=	"Breedband(PPPoE)"
+pppoe_desc	=	"Voer de accountinformatie in van uw Internet Service Provider (ISP)."
+
+[vtype]
+bad_host	=	"Ongeldige servernaam."
+bad_ip	=	"Het IP-adres dat u ingevoerd hebt, is ongeldig."
+bad_mask	=	"Het subnet mask dat u ingevoerd hebt, is ongeldig."
+invalid_host	=	"De servernaam kan bestaan uit letters, cijfers, liggende streepjes en mintekens. Het eerste teken moet een letter zijn."
+password_confirm_failed	=	"Kan het wachtwoord niet bevestigen. Voer het opnieuw in."
+

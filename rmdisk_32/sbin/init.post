@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# Synology post init script.
+#
+# Copyright (c) 2003-2013 Synology Inc. All rights reserved.
+
+SupportRAID=`/bin/get_key_value /etc.defaults/synoinfo.conf supportraid`
+
+echo "Post init"
+
+mount /sys
+mount /proc
+
+RootDevice="/dev/md0"
+for item in `cat /proc/cmdline` ; do
+	if [ "`echo $item | cut -d'=' -f 1`" = "root" ]; then
+		RootDevice="`echo $item | cut -d'=' -f 2`"
+		break
+	fi
+done
+
+echo $RootDevice | grep "^ubi" > /dev/null
+if [ 0 -eq $? ]; then
+	# UBIFS need to specified fs type
+	mount -t ubifs $RootDevice /tmpRoot
+else
+	mount $RootDevice /tmpRoot -o barrier=1
+fi
+
+mkdir -p /tmpRoot/initrd
+exec /sbin/switch_root -c /dev/console /tmpRoot /sbin/init

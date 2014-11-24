@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Bakåt"
+alt_next	=	"Nästa"
+apply	=	"OK"
+cancel	=	"Avbryt"
+error_blank	=	"{0} får inte lämnas tomt."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Uppdatera till den senaste versionen av Internet Explorer för att få bästa surfupplevelse. "
+
+[dsinfo]
+ds_model	=	"Modellnamn"
+ds_status	=	"Status"
+ds_version	=	"DSM-version"
+ip_addr	=	"IP-adress"
+mac_addr	=	"MAC-adress"
+server_name	=	"Servernamn"
+version	=	"Version"
+
+[extlang]
+fieldblank	=	"Det här fältet krävs."
+fieldmaxlen	=	"Maximal längd för det här fältet är {0}."
+fieldminlen	=	"Minimal längd för det här fältet är {0}."
+
+[hint]
+eds_default_pwd	=	"För förstagångsanvändare är standardkontot "admin" och lösenordet är tomt."
+
+[network]
+dhcp	=	"Hämta nätverksinställningar automatiskt (DHCP) (rekommenderas)"
+ezinternet_pppoe_title	=	"PPPoE-inställning"
+manual	=	"Använd manuella inställningar"
+netconfig_desc	=	"Konfigurera nätverksmiljön."
+netconfig_title	=	"Nätverksinstallation"
+network_def_gateway	=	"Standardgateway"
+network_dns	=	"DNS-server"
+network_netmask	=	"Subnätmask"
+pppoe	=	"Bredband(PPPoE)"
+pppoe_desc	=	"Ange kontoinformationen från din Internetleverantör (ISP)."
+
+[vtype]
+bad_host	=	"Ogiltigt servernamn."
+bad_ip	=	"IP-adressen du har angivit är ogiltig."
+bad_mask	=	"Subnätmasken du har angivit är ogiltig."
+invalid_host	=	"Servernamnet kan innehålla bokstäver, siffror, understreck och minustecken. Det första tecknet måste vara en bokstav."
+password_confirm_failed	=	"Kunde ej bekräfta lösenordet. Ange lösenordet igen."
+

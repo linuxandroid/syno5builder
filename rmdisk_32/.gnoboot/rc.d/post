@@ -1,0 +1,88 @@
+#!/bin/sh
+
+gnoBootInstallModules()
+{
+	for x in ${HD_MODULES}; do
+		[ -f /lib/modules/$x.ko ] && gnoUpdateFile /lib/modules/$x.ko ${gnoRoot}/lib/modules/$x.ko
+	done
+
+#	modDir="${gnoBoot}/modules.d"
+#	[ -d "${gnoRoot}${modDir}" ] || mkdir "${gnoRoot}${modDir}"
+#	for modfile in $(ls -1 ${gnoBoot}/modules.d); do
+#		gnoUpdateFile "${modDir}/${modfile}" "${gnoRoot}${modDir}/${modfile}"
+#	done
+}
+
+gnoBootUpdateFiles()
+{
+	if [ -d ${gnoBoot} ]; then
+		gnoMountRoot
+		[ -d "${gnoRoot}${gnoBoot}" ] || mkdir "${gnoRoot}${gnoBoot}"
+		gnoUpdateFile "${gnoBoot}/devices-append" "${gnoRoot}${gnoBoot}/devices-append"
+		gnoUpdateFile "${gnoBoot}/rc.d/xpenology" "${gnoRoot}/usr/syno/cfgen/s03_xpenology"
+		gnoUpdateFile "${gnoBoot}/rc.d/init" "${gnoRoot}${gnoBoot}/rc.init"
+		gnoUpdateFile /usr/sbin/virt-what "${gnoRoot}/usr/sbin/virt-what"
+		gnoUpdateFile /usr/sbin/dmidecode "${gnoRoot}/usr/sbin/dmidecode"
+		gnoUpdateFile /usr/libexec/virt-what-cpuid-helper "${gnoRoot}/usr/libexec/virt-what-cpuid-helper"
+
+#		gnoUpdateFile /etc/rc "${gnoRoot}/etc/rc"
+#		gnoUpdateFile /etc/rc "${gnoRoot}/etc.defaults/rc"
+#		gnoUpdateFile /etc/rc.network "${gnoRoot}/etc/rc.network"
+#		gnoUpdateFile /etc/rc.network "${gnoRoot}/etc.defaults/rc.network"
+#		gnoUpdateFile /etc/synoinfo.conf "${gnoRoot}/etc/synoinfo.conf"
+#		gnoUpdateFile /etc/synoinfo.conf "${gnoRoot}/etc.defaults/synoinfo.conf"
+
+		sed -i 's/\/sbin\/sysctl -w kernel.core_pattern=\/volume1\/@%e.core/\/sbin\/sysctl -w kernel.core_pattern=\/dev\/null/' ${gnoRoot}/etc/rc
+		sed -i 's/\/sbin\/sysctl -w kernel.core_pattern=\/volume1\/@%e.core/\/sbin\/sysctl -w kernel.core_pattern=\/dev\/null/' ${gnoRoot}/etc.defaults/rc
+		sed -i 's/\/sbin\/sysctl -w fs.suid_dumpable=2/\/sbin\/sysctl -w fs.suid_dumpable=0/' ${gnoRoot}/etc/rc
+		sed -i 's/\/sbin\/sysctl -w fs.suid_dumpable=2/\/sbin\/sysctl -w fs.suid_dumpable=0/' ${gnoRoot}/etc.defaults/rc
+		sed -i 's/\/sbin\/sysctl -w kernel.suid_dumpable=2/\/sbin\/sysctl -w kernel.suid_dumpable=0/' ${gnoRoot}/etc/rc
+		sed -i 's/\/sbin\/sysctl -w kernel.suid_dumpable=2/\/sbin\/sysctl -w kernel.suid_dumpable=0/' ${gnoRoot}/etc.defaults/rc
+		sed -i '/no mac address found/{:1;N;/ifconfig/!b1;s/\n.*\n/\n\t\treturn;\n\tfi\n/}' ${gnoRoot}/etc/rc.network
+		sed -i '/no mac address found/{:1;N;/ifconfig/!b1;s/\n.*\n/\n\t\treturn;\n\tfi\n/}' ${gnoRoot}/etc.defaults/rc.network
+		sed -i 's/maxdisks="2"/maxdisks="12"/' ${gnoRoot}/etc/synoinfo.conf
+		sed -i 's/esataportcfg="0x4"/esataportcfg="0xff000"/' ${gnoRoot}/etc/synoinfo.conf
+		sed -i 's/usbportcfg="0x1f0000"/usbportcfg="0xf00000"/' ${gnoRoot}/etc/synoinfo.conf
+		sed -i 's/internalportcfg="0x3"/internalportcfg="0xfff"/' ${gnoRoot}/etc/synoinfo.conf
+
+		cp -rf "${gnoBoot}/usr/syno" "${gnoRoot}/usr/"
+
+		if [ $(gnoBootIsCmdParam debug) -eq 1 ]; then
+			echo "----- dmesg -----" >> ${gnoBoot}/debug
+			dmesg >> ${gnoBoot}/debug
+			gnoUpdateFile ${gnoBoot}/debug "${gnoRoot}${gnoBoot}/debug.log"
+		fi
+	fi
+}
+
+gnoBootSynobios()
+{
+	if [ -f /lib/modules/synobios.ko ]; then
+		gnoUpdateFile /lib/modules/synobios.ko "${gnoRoot}/lib/modules/synobios.ko"
+	else
+		echo "BUG: Missing important file, get the latest gnoBoot!!!"
+		sleep 120
+	fi
+}
+
+gnoBootUpgrade()
+{
+	[ $(gnoBootIsCmdParam upgrade) -eq 0 ] && return
+
+	VersionFlash=`/bin/get_key_value /etc.defaults/VERSION buildnumber`
+	VersionHD=`/bin/get_key_value ${Mnt}/etc.defaults/VERSION buildnumber`
+
+	if [ "$VersionFlash" != "$VersionHD" ]; then
+		Exit 7 "Version number not match"
+	fi
+}
+
+gnoBootInitPost()
+{
+	gnoBootUpgrade
+	gnoBootUpdateFiles 
+	gnoBootInstallModules
+	gnoBootSynobios
+}
+
+gnoBootInitPost

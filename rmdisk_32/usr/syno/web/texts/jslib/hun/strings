@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Vissza"
+alt_next	=	"Tovább"
+apply	=	"OK"
+cancel	=	"Mégse"
+error_blank	=	"A(z) {0} nem hagyható üresen."
+title	=	"Synology Web Assistant alkalmazás"
+upgrade_ie_browser	=	"A legjobb böngészési élmény biztosítására frissítse a legújabb verzióra az Internet Explorer böngészõt."
+
+[dsinfo]
+ds_model	=	"Modellnév"
+ds_status	=	"Állapot"
+ds_version	=	"DSM verzió"
+ip_addr	=	"IP-cím"
+mac_addr	=	"MAC cím"
+server_name	=	"Kiszolgáló név"
+version	=	"Verzió"
+
+[extlang]
+fieldblank	=	"A mező kitöltése kötelező."
+fieldmaxlen	=	"A mezõ maximális hossza {0}."
+fieldminlen	=	"A mező minimális hossza {0}."
+
+[hint]
+eds_default_pwd	=	"Kezdő felhasználók esetén az alapértelmezett fiók "admin", a jelszó pedig üres."
+
+[network]
+dhcp	=	"Hálózati konfiguráció automatikus lekérdezése (DHCP) (ajánlott)"
+ezinternet_pppoe_title	=	"PPPoE beállítás"
+manual	=	"Kézi konfigurálás használata"
+netconfig_desc	=	"A hálózati környezet konfigurálása."
+netconfig_title	=	"Hálózat telepítése"
+network_def_gateway	=	"Alapértelmezett átjáró"
+network_dns	=	"DNS szerver"
+network_netmask	=	"Alhálózati maszk"
+pppoe	=	"Szélessávú(PPPoE)"
+pppoe_desc	=	"Kérjük, adja meg internetszolgáltatójától (ISP) kapott fiókinformációját. "
+
+[vtype]
+bad_host	=	"Érvénytelen kiszolgálónév."
+bad_ip	=	"Érvénytelen a beírt IP cím."
+bad_mask	=	"Érvénytelen a beírt alhálózati maszk."
+invalid_host	=	"A szerver neve tartalmazhat betűket, számokat, aláhúzásjeleket és mínusz jeleket. Az első karakternek betűnek kell lennie."
+password_confirm_failed	=	"A jelszó megerősítése sikertelen. Kérjük, adja meg újra a jelszót."
+

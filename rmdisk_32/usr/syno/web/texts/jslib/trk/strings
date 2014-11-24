@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Geri"
+alt_next	=	"İleri"
+apply	=	"Tamam"
+cancel	=	"İptal"
+error_blank	=	"{0} boş olamaz."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"En iyi gözatma deneyimi için Internet Explorer programını en son sürümüne güncelleyin."
+
+[dsinfo]
+ds_model	=	"Model adı"
+ds_status	=	"Status"
+ds_version	=	"DSM sürümü"
+ip_addr	=	"IP adresi"
+mac_addr	=	"MAC adresi"
+server_name	=	"Sunucu adı"
+version	=	"Sürüm"
+
+[extlang]
+fieldblank	=	"Bu alan gereklidir."
+fieldmaxlen	=	"Bu alan için maksimum uzunluk {0}."
+fieldminlen	=	"Bu alan için minimum uzunluk {0}."
+
+[hint]
+eds_default_pwd	=	"İlk kullanıcılar için, varsayılan hesap "admin" ve şifre boştur."
+
+[network]
+dhcp	=	"Ağ yapılandırmasını otomatik olarak al (DHCP) (önerilen)"
+ezinternet_pppoe_title	=	"PPPoE Ayarı"
+manual	=	"Manuel yapılandırma kullan"
+netconfig_desc	=	"Ağ ortamını yapılandırın."
+netconfig_title	=	"Kurulum Ağı"
+network_def_gateway	=	"Varsayılan ağ geçidi"
+network_dns	=	"DNS sunucusu"
+network_netmask	=	"Alt ağ maskesi"
+pppoe	=	"Geniş bant (PPPoE)"
+pppoe_desc	=	"Lütfen İnternet Servis Sağlayıcınızdan (ISP) hesap bilgisini girin."
+
+[vtype]
+bad_host	=	"Geçersiz sunucu adı."
+bad_ip	=	"Girdiğiniz IP adresi geçersiz."
+bad_mask	=	"Girdiğiniz alt ağ maskesi geçersiz."
+invalid_host	=	"Sunucu adında harf, rakam, alt işaretler ve eksi işareti bulunabilir. İlk karakter bir harf olmalıdır."
+password_confirm_failed	=	"Parola onaylanamadı. Lütfen yeniden girin."
+

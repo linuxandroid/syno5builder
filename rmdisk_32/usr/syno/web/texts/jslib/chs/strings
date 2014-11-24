@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"上一步"
+alt_next	=	"下一步"
+apply	=	"确定"
+cancel	=	"取消"
+error_blank	=	"{0} 不能为空。"
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"请将 Internet Explorer 更新到最新版本以获得最佳浏览体验。"
+
+[dsinfo]
+ds_model	=	"产品型号"
+ds_status	=	"状态"
+ds_version	=	"DSM 版本"
+ip_addr	=	"IP 地址"
+mac_addr	=	"网络实体地址 (MAC address)"
+server_name	=	"系统名称"
+version	=	"版本"
+
+[extlang]
+fieldblank	=	"此字段为必填。"
+fieldmaxlen	=	"此字段最多输入 {0} 个字。"
+fieldminlen	=	"此字段最少要输入 {0} 个字。"
+
+[hint]
+eds_default_pwd	=	"对于新用户，默认帐户为“admin”，密码为空。"
+
+[network]
+dhcp	=	"自动获取网络配置 (DHCP)（建议）"
+ezinternet_pppoe_title	=	"PPPoE 设置"
+manual	=	"使用手动配置"
+netconfig_desc	=	"配置网络环境"
+netconfig_title	=	"设置网络"
+network_def_gateway	=	"默认网关"
+network_dns	=	"DNS 服务器"
+network_netmask	=	"子网掩码"
+pppoe	=	"宽带网络 (PPPoE)"
+pppoe_desc	=	"请输入互联网提供者 (ISP) 给予的帐号信息。"
+
+[vtype]
+bad_host	=	"无效的服务器名称。"
+bad_ip	=	"您所输入的 IP 地址不正确。"
+bad_mask	=	"您所输入的子域屏蔽不正确。"
+invalid_host	=	"服务器名称第一个字必须为英文字母，其他的字符可以由英文字母、数字、下划线及减号组成。"
+password_confirm_failed	=	"密码及确认密码不一致，请重新输入。"
+

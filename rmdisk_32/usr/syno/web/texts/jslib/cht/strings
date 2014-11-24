@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"上一步"
+alt_next	=	"下一步"
+apply	=	"確定"
+cancel	=	"取消"
+error_blank	=	"{0} 不可為空的。"
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"請將 Internet Explorer 更新至最新版本以獲得最佳的瀏覽體驗。"
+
+[dsinfo]
+ds_model	=	"產品型號"
+ds_status	=	"狀態"
+ds_version	=	"DSM 版本"
+ip_addr	=	"IP 位址"
+mac_addr	=	"網路實體位址 (MAC address)"
+server_name	=	"系統名稱"
+version	=	"版本"
+
+[extlang]
+fieldblank	=	"此欄位為必填。"
+fieldmaxlen	=	"此欄位最多輸入 {0} 個字。"
+fieldminlen	=	"此欄位最少要輸入 {0} 個字。"
+
+[hint]
+eds_default_pwd	=	"針對初次使用的使用者，預設帳號為「admin」，密碼為空白。"
+
+[network]
+dhcp	=	"自動取得網路設定 (DHCP) (建議)"
+ezinternet_pppoe_title	=	"PPPoE 設定"
+manual	=	"手動設定網路"
+netconfig_desc	=	"請設定網路環境。"
+netconfig_title	=	"設定網路"
+network_def_gateway	=	"預設閘道 (Gateway)"
+network_dns	=	"網域名稱伺服器 (DNS)"
+network_netmask	=	"子網路遮罩"
+pppoe	=	"寬頻網路 (PPPoE)"
+pppoe_desc	=	"請輸入網際網路提供者 (ISP) 給予的帳號資訊。"
+
+[vtype]
+bad_host	=	"伺服器名稱無效。"
+bad_ip	=	"您所輸入的 IP 位址不正確。"
+bad_mask	=	"您所輸入的子網域遮罩不正確。"
+invalid_host	=	"伺服器名稱第一個字必須為英文字母，其他的字元可以由英文字母、數字、底線及減號組成。"
+password_confirm_failed	=	"密碼及確認密碼不一致，請重新輸入。"
+

@@ -1,0 +1,18 @@
+#!/bin/sh
+# Copyright (c) 2000-2010 Synology Inc. All rights reserved.
+
+# Configure routing
+#
+defaultrouter=$1
+case ${defaultrouter} in
+	[Nn][Oo] | '')
+		;;
+	*)
+		# Wait for a while until the network is ready
+		sleep 10
+		echo "Add default router ${defaultrouter}"
+		/bin/ip route add default via ${defaultrouter}
+		;;
+esac
+
+exit 0

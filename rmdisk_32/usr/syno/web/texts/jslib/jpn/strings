@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"戻る"
+alt_next	=	"次へ"
+apply	=	"OK"
+cancel	=	"キャンセル"
+error_blank	=	"{0} を未設定のままにしておくことはできません。"
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"最高のブラウズ環境にするには、最新版の Internet Explorer に更新してください。"
+
+[dsinfo]
+ds_model	=	"製品型番"
+ds_status	=	"ステータス"
+ds_version	=	"DSMバージョン"
+ip_addr	=	"IP アドレス"
+mac_addr	=	"MACアドレス"
+server_name	=	"サーバー名"
+version	=	"バージョン"
+
+[extlang]
+fieldblank	=	"必須フィールド"
+fieldmaxlen	=	"最大文字数は{0}です。"
+fieldminlen	=	"最小文字数は{0}です。"
+
+[hint]
+eds_default_pwd	=	"初めてお使いになる場合は、デフォルトのアカウントは「admin」、パスワードは空欄となっています。"
+
+[network]
+dhcp	=	"DHCP サーバーのネットワーク設定を自動的に取得する (推奨)"
+ezinternet_pppoe_title	=	"PPPoE設定"
+manual	=	"手動で設定する"
+netconfig_desc	=	"ネットワーク環境を設定"
+netconfig_title	=	"ネットワーク設定"
+network_def_gateway	=	"デフォルトゲートウェイ"
+network_dns	=	"DNS サーバー"
+network_netmask	=	"サブネットマスク"
+pppoe	=	"ブロードバンド（PPPoE）"
+pppoe_desc	=	"インターネット・サービス・プロバイダ（ISP）のアカウント情報を入力してください。"
+
+[vtype]
+bad_host	=	"無効なサーバー名"
+bad_ip	=	"入力されたIPアドレスは無効です"
+bad_mask	=	"サブネットマスクの値が無効です"
+invalid_host	=	"サーバー名には、文字、数字、下線、マイナス記号が使用できます。最初は文字で始まる必要があります。"
+password_confirm_failed	=	"パスワードが確認できません。再入力してください。"
+

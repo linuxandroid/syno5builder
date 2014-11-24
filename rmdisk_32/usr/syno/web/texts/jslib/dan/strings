@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Tilbage"
+alt_next	=	"Næste"
+apply	=	"OK"
+cancel	=	"Annuller"
+error_blank	=	"{0} kan ikke være tom."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Opdater Internet Explorer til seneste version for at få den bedste browseroplevelse."
+
+[dsinfo]
+ds_model	=	"Modelnavn"
+ds_status	=	"Status"
+ds_version	=	"DSM-version"
+ip_addr	=	"IP-adresse"
+mac_addr	=	"MAC-adresse"
+server_name	=	"Servernavn"
+version	=	"Version"
+
+[extlang]
+fieldblank	=	"Dette felt er påkrævet."
+fieldmaxlen	=	"Maksimumlængden for dette felt er {0}."
+fieldminlen	=	"Minimumlængden for dette felt er {0}."
+
+[hint]
+eds_default_pwd	=	"For førstegangsbrugere er standardkontoen "admin" og adgangskoden er tom."
+
+[network]
+dhcp	=	"Hent netværkskonfiguration automatisk (DHCP) (anbefales)"
+ezinternet_pppoe_title	=	"Indstilling af PPPoE"
+manual	=	"Brug manuel konfiguration"
+netconfig_desc	=	"Konfigurer netværksmiljøet."
+netconfig_title	=	"Konfigurer netværk"
+network_def_gateway	=	"Standard-gateway"
+network_dns	=	"DNS-server"
+network_netmask	=	"Undernetmaske"
+pppoe	=	"Bredbånd(PPPoE)"
+pppoe_desc	=	"Indtast kontooplysninger fra din internetudbyder (ISP)."
+
+[vtype]
+bad_host	=	"Ugyldigt servernavn."
+bad_ip	=	"Den indtastede IP-adresse er ugyldig."
+bad_mask	=	"Den indtastede undernetmaske er ugyldig."
+invalid_host	=	"Servernavnet kan indeholde bogstaver, tal, understregninger og bindestreger. Det første tegn skal være et bogstav."
+password_confirm_failed	=	"Kunne ikke bekræfte adgangskode. Indtast det igen."
+

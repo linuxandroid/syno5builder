@@ -1,0 +1,155 @@
+#!/bin/sh
+
+gnoBootCmdParamValue()
+{
+	paramName=$1
+	[ -z "${paramName}" ] && return
+	for param in `cat /proc/cmdline`; do
+		if [ "${param//=*}" == "${paramName}" ]; then
+			paramValue=${param//*=} 
+			echo ${paramValue}
+			break
+		fi
+	done
+}
+
+gnoBootCmdParamValues()
+{
+	paramName=$1
+	paramValues=$(gnoBootCmdParamValue "${paramName}")
+	echo ${paramValues//,/ }
+}
+
+gnoBootBlacklistModules()
+{
+	paramValues=$(gnoBootCmdParamValues "rmmod")
+	for paramValue in ${paramValues}; do
+		RD_MODULES="${RD_MODULES//${paramValue}/}"
+	done
+}
+
+gnoBootLoadExtraModules()
+{
+	paramValues=$(gnoBootCmdParamValues "insmod")
+	RD_MODULES="${RD_MODULES} ${paramValues}"
+}
+
+gnoBootSetIOSched()
+{
+	ioSched=$(gnoBootCmdParamValue "elevator")
+	[ -z "${ioSched}" ] && ioSched=$1
+
+	for blk in $(egrep '[sh]d.*[^1-9]$' /proc/partitions | cut -c 26-); do
+		echo ${ioSched:='cfq'} > /sys/block/${blk}/queue/scheduler
+	done
+}
+
+gnoBootLoadModules()
+{
+	for modfile in $(ls -1 ${gnoBoot}/modules.d); do
+		source ${gnoBoot}/modules.d/${modfile}
+	done
+	if [ -e /usr/sbin/virt-what ]; then
+		RCMsg "Checking hypervisor" true
+		hypervisor=$(/usr/sbin/virt-what)
+		echo "Detected hypervisor: ${hypervisor}"
+	else
+		hypervisor="no-virt-what"
+	fi
+	case ${hypervisor} in 
+		vmware) 
+			RD_MODULES="${INTEL_ATA} ${SATA_STOR} ${SCSI_STOR}"
+			RD_MODULES="${RD_MODULES} ${INTELP_NET} ${VMWARE}"
+			RD_MODULES="${RD_MODULES} ${RD_MISC} ${RD_SYNO}"
+			ioSched="noop"
+			;;
+		kvm|xen*)
+			if [ ${hypervisor} == "kvm" ]; then
+				ioSched="deadline"
+			else
+				ioSched="noop"
+				RD_MODULES="${XEN}"
+			fi
+			RD_MODULES="${RD_MODULES} ${VIRTIO}"
+			RD_MODULES="${RD_MODULES} ${RD_MISC} ${RD_SYNO}"
+			;;
+		hyperv)
+			RD_MODULES="${INTEL_ATA} ${SATA_STOR} ${SCSI_STOR}"
+			RD_MODULES="${RD_MODULES} ${TULIP} ${INTELP_NET} ${HYPERV}"
+			RD_MODULES="${RD_MODULES} ${RD_MISC} ${RD_SYNO}"
+			;;
+		virtualbox)
+			# Reference: http://openbenchmarking.org/system/1110169-AR-1110160AR44/VirtualBox/lspci
+			RD_MODULES="${RD_SYNO} ${INTEL_ATA} ${INTELP_NET} ${VIRTIO}"
+			RD_MODULES="${RD_MODULES} ${RD_MISC} ${RD_SYNO}"
+			;;
+		no-virt-what)
+			RD_MODULES="${RD_MODULES} ${VIRT_MOD}"
+			;;
+	esac
+	gnoBootBlacklistModules
+	gnoBootLoadExtraModules
+	SYNOLoadModules ${RD_MODULES}
+	# workaround to initialize mpt2sas disks using VT-d
+	#SYNOUnloadModules "mpt2sas"
+	#SYNOLoadModules "mpt2sas"
+	gnoBootSetIOSched ${ioSched}
+}
+
+gnoBootRescanDisk()
+{
+	rescanDisk=0
+	if [ `grep -c '^md[0-9]' /proc/mdstat` -eq 0 ]; then
+		rescanDisk=1
+	fi
+
+	[ ${rescanDisk} -eq 1 ] && RCMsg "Re-scanning disks" \
+		/sbin/mdadm --auto-detect
+}
+
+gnoBootCheckCmdParam()
+{
+	RCMsg "Checking GRUB boot options" true
+	if [ $(gnoBootIsCmdParam debug) -eq 1 ]; then
+		echo 1 > /proc/sys/kernel/syno_ata_debug
+		echo 1 > /proc/sys/kernel/syno_debug_flag
+		set -x
+		exec 2> ${gnoBoot}/debug
+	fi
+
+	installVersion=$(gnoBootCmdParamValue upgrade)
+	if [ $(gnoBootIsCmdParam upgrade) -eq 1 ]; then
+		for x in $(cat /etc/VERSION); do
+			if [ ${x//=*/} == "majorversion" ]; then 
+				synomajor=${installVersion//.*/}
+				echo "majorversion=\"${synomajor}\"" > ${gnoBoot}/etc/VERSION
+			elif [ ${x//=*/} == "minorversion" ]; then
+	            synominor=${installVersion//*./}
+	            synominor=${synominor//-*/}
+				echo "minorversion=\"${synominor}\"" >> ${gnoBoot}/etc/VERSION
+			elif [ ${x//=*/} == "buildnumber" ]; then
+				synobuild=${installVersion//*-/}
+				echo "buildnumber=\"${synobuild}\"" >> ${gnoBoot}/etc/VERSION
+			else
+				echo "$x" >> ${gnoBoot}/etc/VERSION
+			fi
+		done
+		mv ${gnoBoot}/etc/VERSION /etc/VERSION
+		gnoUpdateFile /etc/VERSION /etc.defaults/VERSION
+		gnoMountRoot
+		gnoUpdateFile /etc/VERSION ${gnoRoot}/etc.defaults/VERSION
+	fi
+}
+
+gnoBootInitPre()
+{
+	[ -c /dev/tty5 ] || mknod /dev/tty5 c 4 5
+	[ -e /dev/synobios ] && rm -f /dev/synobios
+	gnoBootLoadModules
+	gnoBootRescanDisk
+	gnoBootCheckCmdParam
+	gnoBootRegen
+	gnoBootRegenDev
+}
+
+gnoBootInitPre

@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Zpět"
+alt_next	=	"Další"
+apply	=	"OK"
+cancel	=	"Storno"
+error_blank	=	"{0} nemůže být prázdný."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Aktualizujte Internet Explorer na nejnovější verzi, abyste získali nejlepší možnosti prohlížení."
+
+[dsinfo]
+ds_model	=	"Název modelu"
+ds_status	=	"Stav"
+ds_version	=	"Verze DSM"
+ip_addr	=	"IP adresa"
+mac_addr	=	"Adresa MAC"
+server_name	=	"Název serveru"
+version	=	"Verze"
+
+[extlang]
+fieldblank	=	"Toto pole je vyžadováno."
+fieldmaxlen	=	"Maximální délka pro toto pole je {0}."
+fieldminlen	=	"Minimální délka pro toto pole je {0}."
+
+[hint]
+eds_default_pwd	=	"Pro začínající uživatele je výchozí účtem účet „admin“ a heslo je prázdné."
+
+[network]
+dhcp	=	"Získat konfiguraci sítě automaticky (DHCP) (doporučeno)"
+ezinternet_pppoe_title	=	"Nastavení PPPoE"
+manual	=	"Použít ruční konfiguraci"
+netconfig_desc	=	"Konfigurovat síťové prostředí."
+netconfig_title	=	"Nastavení sítě"
+network_def_gateway	=	"Výchozí brána"
+network_dns	=	"Server DNS"
+network_netmask	=	"Maska podsítě"
+pppoe	=	"Širokopásmové připojení (PPPoE)"
+pppoe_desc	=	"Zadejte informace pro účet u poskytovatele internetových služeb (ISP)."
+
+[vtype]
+bad_host	=	"Neplatný název serveru."
+bad_ip	=	"IP adresa, kterou jste zadali, není platná."
+bad_mask	=	"Maska podsítě, kterou jste zadali, není platná."
+invalid_host	=	"Název serveru může obsahovat písmena, čísla, podtržítka a symboly mínus. První znak musí být písmeno."
+password_confirm_failed	=	"Heslo nebylo potvrzeno. Zadejte heslo znovu."
+

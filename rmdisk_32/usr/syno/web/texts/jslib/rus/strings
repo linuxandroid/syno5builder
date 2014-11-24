@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Назад"
+alt_next	=	"Далее"
+apply	=	"OK"
+cancel	=	"Отмена"
+error_blank	=	"{0} не должен оставаться пустым."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Обновите Internet Explorer до последней версии, чтобы использовать все преимущества обозревателя."
+
+[dsinfo]
+ds_model	=	"Название модели"
+ds_status	=	"Статус"
+ds_version	=	"Версия DSM"
+ip_addr	=	"IP-адрес"
+mac_addr	=	"MAC-адрес"
+server_name	=	"Имя сервера"
+version	=	"Версия"
+
+[extlang]
+fieldblank	=	"Данное поле должно быть заполнено."
+fieldmaxlen	=	"Максимальное количество символов для данного поля {0}."
+fieldminlen	=	"Минимально количество символов для данного поля {0}."
+
+[hint]
+eds_default_pwd	=	"При первом входе учетной записью по умолчанию является "admin", а паролем — пустое значение."
+
+[network]
+dhcp	=	"Получить конфигурацию сети автоматически (DHCP)(рекомендуется)"
+ezinternet_pppoe_title	=	"Настройки PPPoE"
+manual	=	"Конфигурировать вручную"
+netconfig_desc	=	"Настройте сетевую среду."
+netconfig_title	=	"Настройка сети"
+network_def_gateway	=	"Шлюз по умолчанию"
+network_dns	=	"DNS-сервер"
+network_netmask	=	"Маска подсети"
+pppoe	=	"Широкополосный(PPPoE)"
+pppoe_desc	=	"Введите информацию об учетной записи провайдера услуг Интернета (ISP)."
+
+[vtype]
+bad_host	=	"Недопустимое имя сервера."
+bad_ip	=	"Введенный IP-адрес задан неверно."
+bad_mask	=	" Введенное имя маски подсети задано неверно."
+invalid_host	=	"Имя сервера может состоять из букв, цифр, символов подчеркивания и знаков минус. Первый символ должен быть буквой."
+password_confirm_failed	=	"Не удалось подтвердить пароль. Введите его повторно."
+

@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Voltar"
+alt_next	=	"Seguinte"
+apply	=	"OK"
+cancel	=	"Cancelar"
+error_blank	=	"{0} não pode estar vazio."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Atualize o Internet Explorer para a versão mais atual para obter a melhor experiência de navegação possível."
+
+[dsinfo]
+ds_model	=	"Nome do modelo"
+ds_status	=	"Status"
+ds_version	=	"Versão do DSM"
+ip_addr	=	"Endereço IP"
+mac_addr	=	"Endereço MAC"
+server_name	=	"Nome do servidor"
+version	=	"Versão"
+
+[extlang]
+fieldblank	=	"Este campo é necessário."
+fieldmaxlen	=	"O tamanho máximo para este campo é {0}."
+fieldminlen	=	"O tamanho mínimo para este campo é {0}."
+
+[hint]
+eds_default_pwd	=	"Para os utilizadores pela primeira vez, a conta predefinida é "admin" e a palavra-passe fica vazia."
+
+[network]
+dhcp	=	"Obter a configuração da rede automaticamente (DHCP) (recomendado)"
+ezinternet_pppoe_title	=	"Definição de PPPoE"
+manual	=	"Utilize a configuração manual"
+netconfig_desc	=	"Configurar ambiente de rede."
+netconfig_title	=	"Configuração da rede"
+network_def_gateway	=	"Gateway predefinido"
+network_dns	=	"Servidor DNS"
+network_netmask	=	"Máscara de sub-rede"
+pppoe	=	"Banda Larga (PPPoE)"
+pppoe_desc	=	"Introduza a informação da conta do seu Fornecedor do Serviço de Internet (ISP)."
+
+[vtype]
+bad_host	=	"Nome de servidor inválido."
+bad_ip	=	"O endereço IP que introduziu é inválido."
+bad_mask	=	"A máscara de sub-rede que introduziu é inválida."
+invalid_host	=	"O nome do servidor pode conter letras, números, sinais de sublinhado e sinais de subtracção. O primeiro caractere deve ser uma letra."
+password_confirm_failed	=	"Erro ao confirmar a palavra-passe. Introduza novamente."
+

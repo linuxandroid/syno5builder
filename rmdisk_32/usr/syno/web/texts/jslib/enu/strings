@@ -1,0 +1,48 @@
+
+# Copyright (c) 2000-2008 Synology Inc. All rights reserved.
+
+[common]
+alt_back	=	"Back"
+alt_next	=	"Next"
+apply	=	"OK"
+cancel	=	"Cancel"
+error_blank	=	"{0} cannot be empty."
+title	=	"Synology Web Assistant"
+upgrade_ie_browser	=	"Please update Internet Explorer to the latest version to get the best browsing experience."
+
+[dsinfo]
+ds_model	=	"Model name"
+ds_status	=	"Status"
+ds_version	=	"DSM version"
+ip_addr	=	"IP address"
+mac_addr	=	"MAC address"
+server_name	=	"Server name"
+version	=	"Version"
+
+[extlang]
+fieldblank	=	"This field is required."
+fieldmaxlen	=	"The maximum length for this field is {0}."
+fieldminlen	=	"The minimum length for this field is {0}."
+
+[hint]
+eds_default_pwd	=	"For first time users, the default account is "admin" and the password is blank."
+
+[network]
+dhcp	=	"Get network configuration automatically (DHCP) (recommended)"
+ezinternet_pppoe_title	=	"PPPoE Setting"
+manual	=	"Use manual configuration"
+netconfig_desc	=	"Configure the network environment."
+netconfig_title	=	"Setup Network"
+network_def_gateway	=	"Default gateway"
+network_dns	=	"DNS server"
+network_netmask	=	"Subnet mask"
+pppoe	=	"Broadband (PPPoE)"
+pppoe_desc	=	"Please enter the account information from your Internet Service Provider (ISP)."
+
+[vtype]
+bad_host	=	"Invalid server name."
+bad_ip	=	"The IP address you entered is invalid."
+bad_mask	=	"The subnet mask you entered is invalid."
+invalid_host	=	"Server name may contain letters, numbers, underscores and minus signs. The first character must be a letter."
+password_confirm_failed	=	"Failed to confirm password. Please enter it again."
+
