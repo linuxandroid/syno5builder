@@ -4,7 +4,7 @@
 echo -e "\033[41;37m Building modules ... \033[0m"
 cd kernel
 if [ ! -f .config ]; then
-	make syno5_defconfig
+	make syno5_sim_defconfig
 fi
 make modules -j8
 cd ..
